@@ -204,7 +204,7 @@ fakeSearch.addEventListener('keypress', function(e) {
 
 // Post-it color change functionality
 const postItColorInput = document.getElementById('post-it-color');
-const postItTextColorInput = document.getElementById('post-it-text-color');
+const postItTextColorInput = document.getElementById('.post-it-text-color');
 
 postItColorInput.addEventListener('input', function() {
     postIt.style.backgroundColor = postItColorInput.value;
@@ -219,6 +219,3 @@ postItTextColorInput.addEventListener('input', function() {
     const newTaskInput = document.getElementById('new-task');
     newTaskInput.style.color = postItTextColorInput.value;
 });
-
-
-
