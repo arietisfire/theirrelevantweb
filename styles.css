@@ -119,6 +119,25 @@ footer a:hover {
 #customization-menu label {
     margin-right: 5px;
 }
+#embed-link {
+    width: 100%;
+    height: 100px;
+    background-color: #222;
+    color: #fff;
+    border: 1px solid #555;
+    border-radius: 5px;
+    padding: 10px;
+    font-family: 'Nunito', sans-serif;
+}
+#apply-embed {
+    margin-top: 10px;
+    background-color: #4B0082;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+}
 .post-it {
     position: absolute;
     top: 100px;
