@@ -113,6 +113,7 @@ function typeEffect() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    loadCustomization();
     typeEffect();
     const audio = document.getElementById('background-music');
     audio.play().catch(error => {
@@ -224,6 +225,7 @@ postItColorInput.addEventListener('input', function() {
     document.querySelectorAll('.post-it').forEach(postIt => {
         postIt.style.backgroundColor = postItColorInput.value;
     });
+    saveCustomization();
 });
 
 postItTextColorInput.addEventListener('input', function() {
@@ -238,6 +240,7 @@ postItTextColorInput.addEventListener('input', function() {
             newTaskInput.style.color = postItTextColorInput.value;
         }
     });
+    saveCustomization();
 });
 
 // Add and delete post-it notes functionality
@@ -252,12 +255,12 @@ document.addEventListener('DOMContentLoaded', function() {
             <button class="delete-post-it">Delete</button>
         `;
         makeDraggable(newPostIt);
-        newPostIt.querySelector('.delete-post-it').add
-EventListener('click', function() {
-    newPostIt.remove();
-});
-postItContainer.appendChild(newPostIt);
-});
+        newPostIt.querySelector('.delete-post-it').addEventListener('click', function() {
+            newPostIt.remove();
+        });
+        postItContainer.appendChild(newPostIt);
+        saveCustomization();
+    });
 });
 
 // Make the initial post-it draggable
@@ -270,52 +273,106 @@ const titleColorPicker = document.getElementById('title-color-picker');
 const footerColorPicker = document.getElementById('footer-color-picker');
 const cursorUpload = document.getElementById('cursor-upload');
 const cursorSelect = document.getElementById('cursor-select');
+const embedLinkInput = document.getElementById('embed-link');
+const applyEmbedButton = document.getElementById('apply-embed');
 
 bgColorPicker.addEventListener('input', function() {
-document.body.style.backgroundColor = bgColorPicker.value;
-document.body.style.backgroundImage = '';
+    document.body.style.backgroundColor = bgColorPicker.value;
+    document.body.style.backgroundImage = '';
+    saveCustomization();
 });
 
 bgImageUpload.addEventListener('change', function() {
-const file = bgImageUpload.files[0];
-if (file) {
-const reader = new FileReader();
-reader.onload = function(e) {
-    document.body.style.backgroundImage = `url(${e.target.result})`;
-    document.body.style.backgroundSize = 'cover'; // Adjust the image to cover the background
-    document.body.style.backgroundPosition = 'center'; // Center the background image
-};
-reader.readAsDataURL(file);
-}
+    const file = bgImageUpload.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.body.style.backgroundImage = `url(${e.target.result})`;
+            document.body.style.backgroundSize = 'cover';
+            document.body.style.backgroundPosition = 'center';
+            saveCustomization();
+        };
+        reader.readAsDataURL(file);
+    }
 });
 
 titleColorPicker.addEventListener('input', function() {
-document.getElementById('title').style.color = titleColorPicker.value;
+    document.getElementById('title').style.color = titleColorPicker.value;
+    saveCustomization();
 });
 
 footerColorPicker.addEventListener('input', function() {
-document.querySelector('footer').style.color = footerColorPicker.value;
+    document.querySelector('footer').style.color = footerColorPicker.value;
+    saveCustomization();
 });
 
 cursorUpload.addEventListener('change', function() {
-const file = cursorUpload.files[0];
-if (file && file.type === 'image/x-icon') {
-const reader = new FileReader();
-reader.onload = function(e) {
-    document.body.style.cursor = `url(${e.target.result}), auto`;
-};
-reader.readAsDataURL(file);
-} else {
-alert('Please upload a valid .cur file.');
-}
+    const file = cursorUpload.files[0];
+    if (file && file.type === 'image/x-icon') {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.body.style.cursor = `url(${e.target.result}), auto`;
+            saveCustomization();
+        };
+        reader.readAsDataURL(file);
+    } else {
+        alert('Please upload a valid .cur file.');
+    }
 });
 
 cursorSelect.addEventListener('change', function() {
-document.body.style.cursor = cursorSelect.value;
+    document.body.style.cursor = cursorSelect.value;
+    saveCustomization();
 });
+
+// Embed HTML functionality
+applyEmbedButton.addEventListener('click', function() {
+    const embedCode = embedLinkInput.value;
+    const embedContainer = document.getElementById('embed-container');
+    embedContainer.innerHTML = embedCode;
+    saveCustomization();
+});
+
+// Save customization settings to localStorage
+function saveCustomization() {
+    const customization = {
+        backgroundColor: document.body.style.backgroundColor,
+        backgroundImage: document.body.style.backgroundImage,
+        titleColor: document.getElementById('title').style.color,
+        footerColor: document.querySelector('footer').style.color,
+        cursor: document.body.style.cursor,
+        postItBackgroundColor: postItColorInput.value,
+        postItTextColor: postItTextColorInput.value,
+        embedCode: embedLinkInput.value
+    };
+    localStorage.setItem('customization', JSON.stringify(customization));
+}
+
+// Load customization settings from localStorage
+function loadCustomization() {
+    const customization = JSON.parse(localStorage.getItem('customization'));
+    if (customization) {
+        document.body.style.backgroundColor = customization.backgroundColor || '#121212';
+        document.body.style.backgroundImage = customization.backgroundImage || '';
+        document.getElementById('title').style.color = customization.titleColor || '#ffffff';
+        document.querySelector('footer').style.color = customization.footerColor || '#ffffff';
+        document.body.style.cursor = customization.cursor || 'default';
+        postItColorInput.value = customization.postItBackgroundColor || '#4B0082';
+        postItTextColorInput.value = customization.postItTextColor || '#ffffff';
+        embedLinkInput.value = customization.embedCode || '';
+
+        document.querySelectorAll('.post-it').forEach(postIt => {
+            postIt.style.backgroundColor = customization.postItBackgroundColor || '#4B0082';
+            postIt.style.color = customization.postItTextColor || '#ffffff';
+        });
+
+        const embedContainer = document.getElementById('embed-container');
+        embedContainer.innerHTML = customization.embedCode || '';
+    }
+}
 
 // Burger menu toggle functionality
 function toggleMenu() {
-const menu = document.getElementById('customization-menu');
-menu.style.display = menu.style.display === 'none' || menu.style.display === '' ? 'flex' : 'none';
+    const menu = document.getElementById('customization-menu');
+    menu.style.display = menu.style.display === 'none' || menu.style.display === '' ? 'flex' : 'none';
 }
