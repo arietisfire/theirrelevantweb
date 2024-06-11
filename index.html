@@ -9,21 +9,60 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <div class="burger-menu" onclick="toggleMenu()">
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+    </div>
+    <div id="customization-menu">
+        <h2>Customize This Page</h2>
+        <div>
+            <label for="bg-color-picker">Background Color:</label>
+            <input type="color" id="bg-color-picker">
+        </div>
+        <div>
+            <label for="bg-image-upload">Background Image:</label>
+            <input type="file" id="bg-image-upload" accept="image/*">
+        </div>
+        <div>
+            <label for="title-color-picker">Title Text Color:</label>
+            <input type="color" id="title-color-picker">
+        </div>
+        <div>
+            <label for="footer-color-picker">Footer Text Color:</label>
+            <input type="color" id="footer-color-picker">
+        </div>
+        <div>
+            <label for="cursor-upload">Custom Cursor:</label>
+            <input type="file" id="cursor-upload" accept=".cur">
+        </div>
+        <div>
+            <label for="cursor-select">Choose Cursor:</label>
+            <select id="cursor-select">
+                <option value="default">Default</option>
+                <option value="pointer">Pointer</option>
+                <option value="crosshair">Crosshair</option>
+                <option value="move">Move</option>
+            </select>
+        </div>
+        <div>
+            <label for="post-it-bg-color">Post-it Background Color:</label>
+            <input type="color" id="post-it-bg-color">
+        </div>
+        <div>
+            <label for="post-it-text-color">Post-it Text Color:</label>
+            <input type="color" id="post-it-text-color">
+        </div>
+    </div>
     <h1 id="title">The <span>I</span>rrelevant <span>W</span>eb</h1>
     <div class="search-bar">
         <input type="text" id="fake-search" placeholder="Search...">
     </div>
     <button onclick="goToRandomSite()">Take me to an irrelevant website</button>
     <div id="glitter-container"></div>
-    <div class="post-it" id="post-it">
+    <div id="post-it-container" class="post-it">
         <input type="text" id="new-task" placeholder="New task...">
         <div id="tasks"></div>
-    </div>
-    <div class="color-picker">
-        <label for="post-it-color">Post-it Color:</label>
-        <input type="color" id="post-it-color" value="#4B0082">
-        <label for="post-it-text-color">Text Color:</label>
-        <input type="color" id="post-it-text-color" value="#FFFFFF">
     </div>
     <footer>
         <p>© 2024 The Irrelevant Web – Amandine O. All Rights Reserved.</p>
