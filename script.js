@@ -159,8 +159,6 @@ function startDrag(e, element) {
     function stopDrag() {
         document.removeEventListener('mousemove', onMouseMove);
         document.removeEventListener('touchmove', onTouchMove);
-        document.removeEventListener('mouseup', stopDrag);
-        document.removeEventListener('touchend', stopDrag);
     }
 
     document.addEventListener('mousemove', onMouseMove);
@@ -169,7 +167,7 @@ function startDrag(e, element) {
     document.addEventListener('touchend', stopDrag);
 }
 
-makeDraggable(document.getElementById('post-it'));
+document.querySelectorAll('.post-it').forEach(postIt => makeDraggable(postIt));
 
 // To-do list functionality
 const newTaskInput = document.getElementById('new-task');
