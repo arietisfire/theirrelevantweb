@@ -1,20 +1,3 @@
-@keyframes rainbow {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
-@keyframes glitter {
-    0% { opacity: 1; }
-    100% { opacity: 0; transform: scale(2); }
-}
-@keyframes scramble {
-    0% { opacity: 1; }
-    100% { opacity: 1; transform: translateX(0) translateY(0); }
-}
-@keyframes scramble-hover {
-    0% { opacity: 1; }
-    100% { opacity: 1; transform: translateX(calc(var(--x) * 1px)) translateY(calc(var(--y) * 1px)); }
-}
 body {
     display: flex;
     flex-direction: column;
@@ -22,11 +5,14 @@ body {
     align-items: center;
     height: 100vh;
     background-color: #121212;
+    background-size: cover; /* Ajouté pour ajuster l'image de fond */
+    background-position: center; /* Ajouté pour centrer l'image de fond */
     font-family: 'Nunito', sans-serif;
     color: #ffffff;
     overflow: hidden;
     margin: 0;
     padding: 20px;
+    transition: background-color 0.5s, background-image 0.5s;
 }
 h1 {
     font-family: 'Caveat', cursive;
@@ -35,20 +21,7 @@ h1 {
     display: inline-block;
     position: relative;
     animation: scramble 0.5s steps(10) forwards;
-}
-h1:hover {
-    animation: scramble-hover 0.5s steps(10) forwards;
-}
-h1 span {
-    display: inline-block;
-    --x: 0;
-    --y: 0;
-    transition: transform 0.5s;
-}
-h1:hover span {
-    --x: calc((rand() - 0.5) * 20);
-    --y: calc((rand() - 0.5) * 20);
-    transform: translateX(calc(var(--x) * 1px)) translateY(calc(var(--y) * 1px));
+    transition: color 0.5s;
 }
 .search-bar {
     position: relative;
@@ -104,6 +77,7 @@ footer {
     background-color: #222;
     font-size: 0.8em;
     font-family: monospace;
+    transition: color 0.5s;
 }
 footer a {
     color: #fff;
@@ -123,30 +97,52 @@ footer a:hover {
     width: 30px;
     height: 30px;
 }
+#customization-menu {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: #333;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    z-index: 1000;
+    font-size: 0.9em;
+    color: #fff;
+    display: none; /* Initialement masqué */
+    flex-direction: column;
+    gap: 10px;
+}
+#customization-menu h2 {
+    margin: 0 0 10px 0;
+    font-size: 1.2em;
+}
+#customization-menu label {
+    margin-right: 5px;
+}
 .post-it {
     position: absolute;
     top: 100px;
     left: 100px;
     width: 90%;
     max-width: 300px;
-    background-color: #4B0082; /* Default color: Violet/bleu foncé */
+    background-color: #4B0082;
     padding: 10px;
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    font-family: 'Caveat', cursive; /* Change font to Caveat */
+    font-family: 'Caveat', cursive;
     font-size: 1.5em;
     cursor: move;
     z-index: 1000;
     overflow: hidden;
     resize: vertical;
-    color: #fff; /* Default text color: white */
+    color: #fff;
 }
 .post-it input[type="text"] {
     width: 100%;
     border: none;
     background: transparent;
-    font-family: 'Caveat', cursive; /* Change font to Caveat */
+    font-family: 'Caveat', cursive;
     font-size: 1.5em;
-    color: #fff; /* Same color as "New task..." */
+    color: #fff;
     outline: none;
 }
 .post-it .task {
@@ -162,57 +158,53 @@ footer a:hover {
     cursor: pointer;
     color: red;
 }
-.color-picker, .text-color-picker {
+.burger-menu {
     position: absolute;
-    top: 20px;
-    left: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    font-size: 0.8em;
+    top: 10px;
+    left: 10px;
+    cursor: pointer;
+    z-index: 1100;
 }
-.color-picker label, .text-color-picker label {
-    color: #fff;
+.burger-menu .bar {
+    width: 25px;
+    height: 3px;
+    background-color: #fff;
+    margin: 5px 0;
+    transition: 0.4s;
+}
+@keyframes rainbow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+@keyframes glitter {
+    0% { opacity: 1; }
+    100% { opacity: 0; transform: scale(2); }
+}
+@keyframes scramble {
+    0% { opacity: 1; }
+    100% { opacity: 1; transform: translateX(0) translateY(0); }
+}
+@keyframes scramble-hover {
+    0% { opacity: 1; }
+    100% { opacity: 1; transform: translateX(calc(var(--x) * 1px)) translateY(calc(var(--y) * 1px)); }
 }
 @media (max-width: 600px) {
     h1 {
         font-size: 2em;
     }
-
     .search-bar input {
         font-size: 1em;
         padding: 5px;
         width: 100%;
     }
-
     button {
         font-size: 1.2em;
         padding: 10px;
         width: 90%;
     }
-
     .post-it {
         width: 90%;
         font-size: 1em;
     }
-}
-
-### CSS
-
-Ajoutez ce CSS pour le conteneur des post-its et le conteneur des paillettes :
-
-```css
-#post-it-container {
-    position: relative;
-    width: 100%;
-    height: 100%;
-}
-
-#glitter-container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
 }
