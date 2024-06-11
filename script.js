@@ -51,6 +51,7 @@ const sites = [
     "http://salmonofcapistrano.com/"
 ];
 
+// Function to navigate to a random site
 function goToRandomSite() {
     const randomIndex = Math.floor(Math.random() * sites.length);
     window.location.href = sites[randomIndex];
@@ -68,9 +69,7 @@ function createGlitter(e) {
 }
 
 document.addEventListener('mousemove', createGlitter);
-document.addEventListener('touchmove', function(e) {
-    createGlitter(e.touches[0]);
-});
+document.addEventListener('touchmove', (e) => createGlitter(e.touches[0]));
 
 // Fake search bar typing effect
 const fakeSearch = document.getElementById('fake-search');
@@ -113,7 +112,7 @@ function typeEffect() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', () => {
     typeEffect();
     const audio = document.getElementById('background-music');
     audio.play().catch(error => {
@@ -121,6 +120,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+// Toggle sound functionality
 function toggleSound() {
     const audio = document.getElementById('background-music');
     const soundIcon = document.getElementById('sound-icon');
@@ -133,14 +133,10 @@ function toggleSound() {
     }
 }
 
-// Draggable Post-it Note
+// Draggable Post-it Note functionality
 function makeDraggable(element) {
-    element.addEventListener('mousedown', function(e) {
-        startDrag(e, element);
-    });
-    element.addEventListener('touchstart', function(e) {
-        startDrag(e.touches[0], element);
-    });
+    element.addEventListener('mousedown', (e) => startDrag(e, element));
+    element.addEventListener('touchstart', (e) => startDrag(e.touches[0], element));
 }
 
 function startDrag(e, element) {
@@ -160,21 +156,18 @@ function startDrag(e, element) {
         moveAt(event.touches[0].pageX, event.touches[0].pageY);
     }
 
+    function stopDrag() {
+        document.removeEventListener('mousemove', onMouseMove);
+        document.removeEventListener('touchmove', onTouchMove);
+        document.removeEventListener('mouseup', stopDrag);
+        document.removeEventListener('touchend', stopDrag);
+    }
+
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('touchmove', onTouchMove);
-
-    element.onmouseup = function() {
-        document.removeEventListener('mousemove', onMouseMove);
-        element.onmouseup = null;
-    };
-
-    element.ontouchend = function() {
-        document.removeEventListener('touchmove', onTouchMove);
-        element.ontouchend = null;
-    };
+    document.addEventListener('mouseup', stopDrag);
+    document.addEventListener('touchend', stopDrag);
 }
-
-makeDraggable(document.getElementById('post-it'));
 
 // To-do list functionality
 const newTaskInput = document.getElementById('new-task');
@@ -212,16 +205,6 @@ function addTask(text) {
     taskDiv.appendChild(deleteButton);
     tasksContainer.appendChild(taskDiv);
 }
-
-// Google Search functionality
-fakeSearch.addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-        const query = fakeSearch.value.trim();
-        if (query !== '') {
-            window.location.href = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
-        }
-    }
-});
 
 // Post-it color change functionality
 const postItColorInput = document.getElementById('post-it-color');
@@ -265,3 +248,6 @@ document.addEventListener('DOMContentLoaded', function() {
         postItContainer.appendChild(newPostIt);
     });
 });
+
+// Make the initial post-it draggable
+document.querySelectorAll('.post-it').forEach(postIt => makeDraggable(postIt));
