@@ -56,8 +56,8 @@ function goToRandomSite() {
     window.location.href = sites[randomIndex];
 }
 
-// Mouse cursor glitter trail effect
-document.addEventListener('mousemove', function(e) {
+// Mouse and touch cursor glitter trail effect
+function createGlitter(e) {
     const glitterContainer = document.getElementById('glitter-container');
     const glitter = document.createElement('div');
     glitter.classList.add('glitter');
@@ -65,6 +65,11 @@ document.addEventListener('mousemove', function(e) {
     glitter.style.top = `${e.pageY}px`;
     glitterContainer.appendChild(glitter);
     setTimeout(() => glitter.remove(), 1000);
+}
+
+document.addEventListener('mousemove', createGlitter);
+document.addEventListener('touchmove', function(e) {
+    createGlitter(e.touches[0]);
 });
 
 // Fake search bar typing effect
@@ -129,31 +134,47 @@ function toggleSound() {
 }
 
 // Draggable Post-it Note
-const postIt = document.getElementById('post-it');
-postIt.addEventListener('mousedown', function(e) {
-    let shiftX = e.clientX - postIt.getBoundingClientRect().left;
-    let shiftY = e.clientY - postIt.getBoundingClientRect().top;
+function makeDraggable(element) {
+    element.addEventListener('mousedown', function(e) {
+        startDrag(e, element);
+    });
+    element.addEventListener('touchstart', function(e) {
+        startDrag(e.touches[0], element);
+    });
+}
+
+function startDrag(e, element) {
+    let shiftX = e.clientX - element.getBoundingClientRect().left;
+    let shiftY = e.clientY - element.getBoundingClientRect().top;
 
     function moveAt(pageX, pageY) {
-        postIt.style.left = pageX - shiftX + 'px';
-        postIt.style.top = pageY - shiftY + 'px';
+        element.style.left = pageX - shiftX + 'px';
+        element.style.top = pageY - shiftY + 'px';
     }
 
     function onMouseMove(event) {
         moveAt(event.pageX, event.pageY);
     }
 
+    function onTouchMove(event) {
+        moveAt(event.touches[0].pageX, event.touches[0].pageY);
+    }
+
     document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('touchmove', onTouchMove);
 
-    postIt.onmouseup = function() {
+    element.onmouseup = function() {
         document.removeEventListener('mousemove', onMouseMove);
-        postIt.onmouseup = null;
+        element.onmouseup = null;
     };
-});
 
-postIt.ondragstart = function() {
-    return false;
-};
+    element.ontouchend = function() {
+        document.removeEventListener('touchmove', onTouchMove);
+        element.ontouchend = null;
+    };
+}
+
+makeDraggable(document.getElementById('post-it'));
 
 // To-do list functionality
 const newTaskInput = document.getElementById('new-task');
@@ -204,18 +225,43 @@ fakeSearch.addEventListener('keypress', function(e) {
 
 // Post-it color change functionality
 const postItColorInput = document.getElementById('post-it-color');
-const postItTextColorInput = document.getElementById('.post-it-text-color');
+const postItTextColorInput = document.getElementById('post-it-text-color');
 
 postItColorInput.addEventListener('input', function() {
-    postIt.style.backgroundColor = postItColorInput.value;
+    document.querySelectorAll('.post-it').forEach(postIt => {
+        postIt.style.backgroundColor = postItColorInput.value;
+    });
 });
 
 postItTextColorInput.addEventListener('input', function() {
-    postIt.style.color = postItTextColorInput.value;
-    const tasks = postIt.querySelectorAll('.task span');
-    tasks.forEach(task => {
-        task.style.color = postItTextColorInput.value;
+    document.querySelectorAll('.post-it').forEach(postIt => {
+        postIt.style.color = postItTextColorInput.value;
+        const tasks = postIt.querySelectorAll('.task span');
+        tasks.forEach(task => {
+            task.style.color = postItTextColorInput.value;
+        });
+        const newTaskInput = postIt.querySelector('.new-task');
+        if (newTaskInput) {
+            newTaskInput.style.color = postItTextColorInput.value;
+        }
     });
-    const newTaskInput = document.getElementById('new-task');
-    newTaskInput.style.color = postItTextColorInput.value;
+});
+
+// Add and delete post-it notes functionality
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('add-post-it').addEventListener('click', function() {
+        const postItContainer = document.getElementById('post-it-container');
+        const newPostIt = document.createElement('div');
+        newPostIt.classList.add('post-it');
+        newPostIt.innerHTML = `
+            <input type="text" class="new-task" placeholder="New task...">
+            <div class="tasks"></div>
+            <button class="delete-post-it">Delete</button>
+        `;
+        makeDraggable(newPostIt);
+        newPostIt.querySelector('.delete-post-it').addEventListener('click', function() {
+            newPostIt.remove();
+        });
+        postItContainer.appendChild(newPostIt);
+    });
 });
