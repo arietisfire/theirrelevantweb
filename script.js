@@ -169,6 +169,8 @@ function startDrag(e, element) {
     document.addEventListener('touchend', stopDrag);
 }
 
+makeDraggable(document.getElementById('post-it'));
+
 // To-do list functionality
 const newTaskInput = document.getElementById('new-task');
 const tasksContainer = document.getElementById('tasks');
@@ -205,6 +207,16 @@ function addTask(text) {
     taskDiv.appendChild(deleteButton);
     tasksContainer.appendChild(taskDiv);
 }
+
+// Google Search functionality
+fakeSearch.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        const query = fakeSearch.value.trim();
+        if (query !== '') {
+            window.location.href = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+        }
+    }
+});
 
 // Post-it color change functionality
 const postItColorInput = document.getElementById('post-it-color');
