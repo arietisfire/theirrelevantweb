@@ -217,7 +217,7 @@ fakeSearch.addEventListener('keypress', function(e) {
 });
 
 // Post-it color change functionality
-const postItColorInput = document.getElementById('post-it-color');
+const postItColorInput = document.getElementById('post-it-bg-color');
 const postItTextColorInput = document.getElementById('post-it-text-color');
 
 postItColorInput.addEventListener('input', function() {
@@ -252,12 +252,70 @@ document.addEventListener('DOMContentLoaded', function() {
             <button class="delete-post-it">Delete</button>
         `;
         makeDraggable(newPostIt);
-        newPostIt.querySelector('.delete-post-it').addEventListener('click', function() {
-            newPostIt.remove();
-        });
-        postItContainer.appendChild(newPostIt);
-    });
+        newPostIt.querySelector('.delete-post-it').add
+EventListener('click', function() {
+    newPostIt.remove();
+});
+postItContainer.appendChild(newPostIt);
+});
 });
 
 // Make the initial post-it draggable
 document.querySelectorAll('.post-it').forEach(postIt => makeDraggable(postIt));
+
+// Customization functionality
+const bgColorPicker = document.getElementById('bg-color-picker');
+const bgImageUpload = document.getElementById('bg-image-upload');
+const titleColorPicker = document.getElementById('title-color-picker');
+const footerColorPicker = document.getElementById('footer-color-picker');
+const cursorUpload = document.getElementById('cursor-upload');
+const cursorSelect = document.getElementById('cursor-select');
+
+bgColorPicker.addEventListener('input', function() {
+document.body.style.backgroundColor = bgColorPicker.value;
+document.body.style.backgroundImage = '';
+});
+
+bgImageUpload.addEventListener('change', function() {
+const file = bgImageUpload.files[0];
+if (file) {
+const reader = new FileReader();
+reader.onload = function(e) {
+    document.body.style.backgroundImage = `url(${e.target.result})`;
+    document.body.style.backgroundSize = 'cover'; // Adjust the image to cover the background
+    document.body.style.backgroundPosition = 'center'; // Center the background image
+};
+reader.readAsDataURL(file);
+}
+});
+
+titleColorPicker.addEventListener('input', function() {
+document.getElementById('title').style.color = titleColorPicker.value;
+});
+
+footerColorPicker.addEventListener('input', function() {
+document.querySelector('footer').style.color = footerColorPicker.value;
+});
+
+cursorUpload.addEventListener('change', function() {
+const file = cursorUpload.files[0];
+if (file && file.type === 'image/x-icon') {
+const reader = new FileReader();
+reader.onload = function(e) {
+    document.body.style.cursor = `url(${e.target.result}), auto`;
+};
+reader.readAsDataURL(file);
+} else {
+alert('Please upload a valid .cur file.');
+}
+});
+
+cursorSelect.addEventListener('change', function() {
+document.body.style.cursor = cursorSelect.value;
+});
+
+// Burger menu toggle functionality
+function toggleMenu() {
+const menu = document.getElementById('customization-menu');
+menu.style.display = menu.style.display === 'none' || menu.style.display === '' ? 'flex' : 'none';
+}
